@@ -1,0 +1,73 @@
+# Intuition
+<!-- Describe your first thoughts on how to solve this problem. -->
+#### Judging whether current window has target String t with O(1) time.
+# Approach
+<!-- Describe your approach to solving the problem. -->
+#### Starting with Naive solution
+Well, I tried to find naive solution.
+We should check all the window(start, end), which means that we need to iterate thorugh all start,end, O(n^2).
+Then, let's think about how to judge whether this window(start, end) contains String t.
+Well, We should make charCount map for memorize each (char, count) for all chars in string t. Then, while iterating through window(start ,end), doing this thing.
+```java[]
+count = t.length();
+for (int i = start; i < end; i++) {
+    if (charCount.contains(char)) {
+        charCount.set(charCount.get(char) - 1);
+        count--;
+    }
+
+}
+
+```
+# Complexity
+- Time complexity:
+<!-- Add your time complexity here, e.g. $$O(n)$$ -->
+
+- Space complexity:
+<!-- Add your space complexity here, e.g. $$O(n)$$ -->
+
+# Code
+```java []
+class Solution {
+    public String minWindow(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+        int start = 0;
+        int end = 0;
+        int count = t.length();
+        int[] charCount = new int[256];
+        for (char c : t.toCharArray()) {
+            charCount[c]++;
+        }
+        int minLen = Integer.MAX_VALUE;
+        int solStart = 0;
+        int solEnd = 0;
+        while (end < s.length() || count == 0) {
+            if (count == 0) {
+                if (end - start + 1 < minLen) {
+                    solStart = start;
+                    solEnd = end;
+                    minLen = end - start + 1;
+                }
+                char c = s.charAt(start);
+                // System.out.printf("start, end, c, charCount[c] ,count: %d, %d, %c, %d, %d\n", start, end, c, charCount[c], count);
+                charCount[c]++;
+                if (charCount[c] > 0) {
+                    count++;
+                }
+                start++;
+            } else {
+                char c = s.charAt(end);
+                // System.out.printf("start, end, c, charCount[c] ,count: %d, %d, %c, %d, %d\n", start, end, c, charCount[c], count);
+                charCount[c]--;
+                if (charCount[c] >= 0) {
+                    count--;
+                }
+                end++;
+            }
+        }
+
+        return s.substring(solStart, solEnd);
+    }
+}
